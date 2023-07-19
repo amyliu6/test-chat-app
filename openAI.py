@@ -128,14 +128,17 @@ def sendMsgToChatGPT(messages):
             "update_product": update_product,
         }  # only one function in this example, but you can have multiple
         function_name = model_message["function_call"]["name"]
-        fuction_to_call = available_functions[function_name]
-        function_args = json.loads(model_message["function_call"]["arguments"])
-        function_response = fuction_to_call(
-            title=function_args.get("title"),
-            price=function_args.get("price"),
-            category=function_args.get("category"),
-        )
-
+        if function_name == 'create_product':
+        # fuction_to_call = available_functions[function_name]
+            function_args = json.loads(model_message["function_call"]["arguments"])
+            function_response = create_product(
+                title=function_args.get("title"),
+                price=function_args.get("price"),
+                category=function_args.get("category"),
+            )
+        elif function_name == 'update_product':
+            # call update_product
+            function_response = "dummy response"
         # Step 4: send the info on the function call and function response to GPT
         messages.append(model_message)  # extend conversation with assistant's reply
         messages.append(
@@ -146,12 +149,12 @@ def sendMsgToChatGPT(messages):
             }
         )  # extend conversation with function response
 
-        messages.append(
-            {
-                "role": "system",
-                "content": "compose product link using id returned from function, in format ```shopboxo.io/product/<id>```, then return this URL in the response",
-            }
-        ) 
+        # messages.append(
+        #     {
+        #         "role": "system",
+        #         "content": "compose product link using id returned from function, in format ```shopboxo.io/product/<id>```, then return this URL in the response",
+        #     }
+        # ) 
         second_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-0613",
             messages=messages,
