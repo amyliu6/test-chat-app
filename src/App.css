@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  margin: 40px;
 }
 
 .App-logo {
@@ -35,4 +36,71 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-history {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.message-container {
+  margin-top: 10px;
+}
+
+.chat-history h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.message {
+  margin: 10px 0;
+}
+
+.message .role {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.message.bot {
+  color: #0066ff;
+}
+
+/* Styles for the user input section */
+.user-input {
+  margin-top: 50px;
+}
+
+.user-input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.user-input input[type="text"] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.user-input button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #0066ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-input button:hover {
+  background-color: #0052cc;
 }
