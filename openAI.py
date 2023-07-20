@@ -7,13 +7,13 @@ import json
 openai.organization = "org-9DDsktpOgd7k6423x7ZIYwoI"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
-def create_product(title, price, category):
+def create_product(title, price, categories):
     print('Invoke create_product function...')
     return json.dumps(
         {
             "title": title,
             "price": price,
-            "category": category,
+            "categories": categories,
         }
     )
 
@@ -123,9 +123,10 @@ def sendMsgToChatGPT(messages):
         print("======== function_call here: ")
          # Step 3: call the function
         # Note: the JSON response may not always be valid; be sure to handle errors
-        available_functions = {
-            "create_product": create_product,
-            "update_product": update_product,
+        available_functions_response_msg = {
+            "create_product": "Your product has been created. Here is the info: ",
+            "update_product": "We've updated the product. Here is the info: ",
+            "not_supported": "Sorry we don't support this function now."
         }  # only one function in this example, but you can have multiple
         function_name = model_message["function_call"]["name"]
         if function_name == 'create_product':
@@ -134,11 +135,24 @@ def sendMsgToChatGPT(messages):
             function_response = create_product(
                 title=function_args.get("title"),
                 price=function_args.get("price"),
-                category=function_args.get("category"),
+                categories=function_args.get("categories"),
             )
         elif function_name == 'update_product':
             # call update_product
             function_response = "dummy response"
+        else:
+            function_name = "not_supported"
+
+        # compose model_message object
+        model_message = {
+            "choices": [{
+                "message": {
+                    "role": "assistant",
+                    "content": available_functions_response_msg[function_name] + function_response
+                }
+            }]
+        }
+        return model_message
         # Step 4: send the info on the function call and function response to GPT
         messages.append(model_message)  # extend conversation with assistant's reply
         messages.append(
@@ -151,17 +165,18 @@ def sendMsgToChatGPT(messages):
 
         # messages.append(
         #     {
-        #         "role": "system",
-        #         "content": "compose product link using id returned from function, in format ```shopboxo.io/product/<id>```, then return this URL in the response",
+        #         "role": "user",
+        #         "content": "summarize",
         #     }
         # ) 
-        second_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
-            messages=messages,
-        )  # get a new response from GPT where it can see the function response
 
-        print("=========== second_response: ", second_response)
-        return second_response
+        # second_response = openai.ChatCompletion.create(
+        #     model="gpt-3.5-turbo-0613",
+        #     messages=messages,
+        # )  # get a new response from GPT where it can see the function response
+
+        # print("=========== second_response: ", second_response)
+        # return second_response
     
     # Print the model's message
     print(">> AI: ", model_message.content)

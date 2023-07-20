@@ -17,7 +17,7 @@ const App = () => {
   const [messages, setMessages] = useState([
     // {
     //   role: 'system',
-    //   content: "Your role is to help user with product management.d"
+    //   content: "Your role is to help user with product management."
     // //   content: 'As an AI assistant, your aim is to be both helpful and friendly while assisting users with product creation. Follow these steps: Please first evaluate whether the user has provided all required parameters for a function call, then check if any optional fields need to be specified. Remember all parameters provided by users throughout the conversation. Confirm that users have provided all necessary parameters for a function call before proceeding. If a user\'s request is unclear, ask for clarification. Always maintain a friendly and polite tone in your interactions. If a parameter is forgotten, apologize and ask the user to repeat it.'
     // }
   ]);
@@ -79,6 +79,7 @@ const App = () => {
                     onChange={handleInitialPromptChange}
                     variant="outlined"
                     fullWidth
+                    multiline
                 />
                 <Button 
                     variant="contained" 
